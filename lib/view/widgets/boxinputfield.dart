@@ -44,6 +44,7 @@ class BoxInputField extends StatelessWidget {
       // validator: validator,
       controller: controller,
       decoration: InputDecoration(
+        contentPadding: const EdgeInsets.all(10),
         icon: icon,
         errorMaxLines: 10,
         errorStyle: const TextStyle(

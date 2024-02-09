@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebasemain/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends GetWidget<AuthController> {
   HomePage({super.key});
 
-  FirebaseAuth auth=FirebaseAuth.instance;
-
-
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +21,11 @@ class HomePage extends StatelessWidget {
           const Center(
             child: Text("hello"),
           ),
-          ListView(
-            children: [
-              auth.currentUser!.emailVerified?Text("${auth.currentUser!.email!} succesfully verified!"):Text("${auth.currentUser!.email!} not verified!"),
-            ],
+          ElevatedButton(
+            onPressed: () {
+              controller.signOut();
+            },
+            child: Text("log Out"),
           ),
         ],
       ),

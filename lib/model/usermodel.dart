@@ -7,15 +7,15 @@ class UserModel {
     this.email,
     this.id,
     this.phone,
-    this.address,
   });
+
+  
   factory UserModel.fromMap(DocumentSnapshot map) {
     return UserModel(
       id: map.id,
       username: map["username"],
       email: map["email"],
       phone: map["phone"],
-      address: map["address"],
     );
   }
   Map<String, dynamic> toMap() {
@@ -24,7 +24,6 @@ class UserModel {
       "username": username,
       "email": email,
       "phone": phone,
-      "address": address,
     };
   }
 }

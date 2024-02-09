@@ -2,67 +2,61 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebasemain/model/usermodel.dart';
 import 'package:firebasemain/view/screens/home_page.dart';
-import 'package:flutter/material.dart';
+import 'package:firebasemain/view/screens/loginpage.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController extends GetxController {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  GoogleSignIn googleSignIn = GoogleSignIn(scopes: ["email"]);
+  late Rx<User?> _firebaseUser;
 
-  TextEditingController signUsername = TextEditingController();
-  TextEditingController signPassword = TextEditingController();
-  TextEditingController signEmail = TextEditingController();
-  TextEditingController signPhone = TextEditingController();
-  TextEditingController signAddress = TextEditingController();
+  String get user {
+    if (_firebaseUser.value != null) {
+      return _firebaseUser.value!.email!;
+    } else {
+      return "";
+    }
+  }
 
-  TextEditingController loginEmail = TextEditingController();
-  TextEditingController loginPassword = TextEditingController();
+  @override
+  void onInit() {
+    _firebaseUser = Rx<User?>(_auth.currentUser);
+    _firebaseUser.bindStream(_auth.authStateChanges());
+  }
 
-  var loading = false.obs;
-
-  signUp() async {
+  void createUser(String name, String email, String password) async {
     try {
-      loading.value = true;
-      await auth.createUserWithEmailAndPassword(
-          email: signEmail.text, password: signPassword.text);
-      await addUser();
-      await verifyEmail(); 
-      Get.to(() => HomePage());
-      loading.value = false;
+      CollectionReference reference =
+          FirebaseFirestore.instance.collection("Users");
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        reference.add({
+          'name': name,
+          'email': email,
+        }).then((value) => Get.offAll(() => LoginPage()));
+      });
     } catch (e) {
-      Get.snackbar("Error Signing In!", e.toString());
-      loading.value=false;
+      Get.snackbar("erro creating account", e.toString());
     }
   }
 
-  addUser() async {
-    UserModel user = UserModel(
-      username: signUsername.text,
-      email: auth.currentUser!.email,
-      phone: signPhone.text,
-      address: signAddress.text,
-    );
-    await db
-        .collection("users")
-        .doc(auth.currentUser!.uid)
-        .collection("profile")
-        .add(user.toMap());
-  }
-
-  logOut()async{
-    await auth.signOut();
-  }
-
-  logIn() async{
-    try{
-          await auth.signInWithEmailAndPassword(email: loginEmail.text, password: loginPassword.text);
-    }
-    catch(e){
-      Get.snackbar("Error Loging In!", e.toString());
+  void logIn(String email, String password) async {
+    try {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then(
+            (value) => Get.offAll(
+              () => HomePage(),
+            ),
+          );
+    } catch (e) {
+      Get.snackbar("Error while logging in", e.toString());
     }
   }
-  verifyEmail() async{
-    await auth.currentUser!.sendEmailVerification();
-    Get.snackbar("Verify your email", "email send to ${auth.currentUser!.email}");
+
+  Future<void> signOut() async {
+    await _auth.signOut().then((value) => Get.offAll(() => LoginPage()));
   }
 }
