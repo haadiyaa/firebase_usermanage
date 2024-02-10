@@ -1,16 +1,17 @@
 import 'package:firebasemain/controller/auth_controller.dart';
+import 'package:firebasemain/view/screens/forgotpassword.dart';
 import 'package:firebasemain/view/screens/signup_page.dart';
 import 'package:firebasemain/view/widgets/boxinputfield.dart';
+import 'package:firebasemain/view/widgets/googlesignin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginPage extends GetWidget<AuthController> {
-   LoginPage({super.key});
+  LoginPage({super.key});
 
-    // final ctrl = Get.put(AuthController());
-    final TextEditingController email=TextEditingController();
-    final TextEditingController pass=TextEditingController();
-
+  // final ctrl = Get.put(AuthController());
+  final TextEditingController email = TextEditingController();
+  final TextEditingController pass = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +32,9 @@ class LoginPage extends GetWidget<AuthController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // SizedBox(height: 20,),
-              // BoxInputField(
-              //   // controller: ctrl.signUsername,
-              //   placeholder: const Text("Username"),
-              //   icon: const Icon(Icons.person),
-              // ),
               const SizedBox(
                 height: 20,
               ),
-              
               BoxInputField(
                 // controller: ctrl.loginEmail,
                 controller: email,
@@ -59,39 +53,52 @@ class LoginPage extends GetWidget<AuthController> {
               const SizedBox(
                 height: 20,
               ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => ForgotPassword());
+                },
+                child: const Text("Forgot Password? Reset Now"),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               InkWell(
                 onTap: _login,
-                child:  Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade500,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: 
-                    // ctrl.loading.value
-                    //     ? const CircularProgressIndicator(
-                    //         color: Colors.white,
-                    //       )
-                    //     : 
-                        const Text(
-                            "Log In",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                          ),
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade500,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    "Log In",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
-              
+              ),
+              const SizedBox(height: 20,),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Divider(),
+                  Text("OR"),
+                  Divider(),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const GoogleSignIn(),
               const SizedBox(
                 height: 30,
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAll(()=>SignUpPage());
+                  Get.offAll(() => SignUpPage());
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Don't have an account? "),
@@ -101,7 +108,7 @@ class LoginPage extends GetWidget<AuthController> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

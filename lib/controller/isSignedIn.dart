@@ -10,7 +10,7 @@ class IsSignedIn extends GetWidget<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Obx((){
-      return Get.find<AuthController>().user!=null?HomePage():LoginPage();
+      return (Get.find<AuthController>().user!=null)?LoginPage():HomePage();
     });
   }
 }

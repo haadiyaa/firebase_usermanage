@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebasemain/controller/auth_controller.dart';
+import 'package:firebasemain/view/screens/deleteaccount.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,6 +27,18 @@ class HomePage extends GetWidget<AuthController> {
               controller.signOut();
             },
             child: Text("log Out"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.to(()=>DeleteAccount());
+            },
+            child: const Text("Delete account"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              controller.google_signOut();
+            },
+            child: const Text("Google Sign Out"),
           ),
         ],
       ),

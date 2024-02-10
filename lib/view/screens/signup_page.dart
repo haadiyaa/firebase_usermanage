@@ -58,28 +58,11 @@ class SignUpPage extends GetWidget<AuthController> {
               const SizedBox(
                 height: 20,
               ),
-              // BoxInputField(
-              //   controller: phone,
-              //   placeholder: const Text("Phone Number"),
-              //   icon: const Icon(Icons.phone),
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // BoxInputField(
-              //   controller: address,
-              //   placeholder: const Text("Address"),
-              //   icon: const Icon(Icons.location_city),
-              //   line: 3,
-              // ),
-              // const SizedBox(
-              //   height: 30,
-              // ),
               InkWell(
                 onTap: registerUser,
                 child: 
-                // Obx(
-                //   () => 
+                Obx(
+                  () => 
                   Container(
                     alignment: Alignment.center,
                     height: 50,
@@ -87,12 +70,7 @@ class SignUpPage extends GetWidget<AuthController> {
                       color: Colors.blue.shade500,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: 
-                    // ctrl.loading.value
-                    //     ? const CircularProgressIndicator(
-                    //         color: Colors.white,
-                    //       )
-                    //     : 
+                    child: controller.loading.value?const CircularProgressIndicator(color: Colors.white,):
                         const Text(
                             "Sign Up",
                             style: TextStyle(
@@ -102,7 +80,7 @@ class SignUpPage extends GetWidget<AuthController> {
                           ),
                   ),
                 ),
-              // ),
+              ),
               const SizedBox(
                 height: 30,
               ),
@@ -110,7 +88,7 @@ class SignUpPage extends GetWidget<AuthController> {
                 onTap: () {
                   Get.offAll(()=>LoginPage());
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Already have an account? "),

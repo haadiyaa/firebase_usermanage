@@ -11,6 +11,8 @@ class AuthController extends GetxController {
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ["email"]);
   late Rx<User?> _firebaseUser;
 
+  var loading=false.obs;
+
   String get user {
     if (_firebaseUser.value != null) {
       return _firebaseUser.value!.email!;
@@ -21,12 +23,14 @@ class AuthController extends GetxController {
 
   @override
   void onInit() {
+    // super.onInit();
     _firebaseUser = Rx<User?>(_auth.currentUser);
     _firebaseUser.bindStream(_auth.authStateChanges());
   }
 
   void createUser(String name, String email, String password) async {
     try {
+      loading.value=true;
       CollectionReference reference =
           FirebaseFirestore.instance.collection("Users");
       await _auth
@@ -37,8 +41,10 @@ class AuthController extends GetxController {
           'email': email,
         }).then((value) => Get.offAll(() => LoginPage()));
       });
+      loading.value=false;
     } catch (e) {
       Get.snackbar("erro creating account", e.toString());
+      loading.value=false;
     }
   }
 
@@ -58,5 +64,52 @@ class AuthController extends GetxController {
 
   Future<void> signOut() async {
     await _auth.signOut().then((value) => Get.offAll(() => LoginPage()));
+  }
+
+  void sendpasswordResetemail(String email) async {
+    try {
+      await _auth
+          .sendPasswordResetEmail(email: email)
+          .then((value) => Get.offAll(() => LoginPage()));
+      Get.snackbar("Password reset email has been sent", "success");
+    } catch (e) {
+      Get.snackbar("Error sending email", e.toString());
+    }
+  }
+
+  void deleteAccount(String email, String pass) async {
+    User? user = await _auth.currentUser;
+    AuthCredential credential =
+        EmailAuthProvider.credential(email: email, password: pass);
+    try {
+      await user!.reauthenticateWithCredential(credential).then((value) {
+        value.user!.delete().then((value) {
+          Get.offAll(() => LoginPage());
+          Get.snackbar("Account deleted", "success");
+        });
+      });
+    } catch (e) {
+      Get.snackbar("Error deleting account!", e.toString());
+    }
+  }
+
+  void google_signIn()async{
+    final GoogleSignInAccount? googleUser=await googleSignIn.signIn();
+
+    final GoogleSignInAuthentication googleAuth=await googleUser!.authentication;
+
+    final AuthCredential credential=GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+
+    );
+    // final  User user=await _auth.signInWithCredential(credential).then((value) => Get.offAll(()=>HomePage()));
+    final UserCredential userCredential=await _auth.signInWithCredential(credential);
+    final User user=userCredential.user!;
+    Get.offAll(()=>HomePage());
+  }
+
+  void google_signOut()async{
+    await googleSignIn.signOut();
   }
 }
