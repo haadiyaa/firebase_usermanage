@@ -59,13 +59,7 @@ class DeleteAccount extends GetWidget<AuthController> {
                       color: Colors.blue.shade500,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: 
-                    // ctrl.loading.value
-                    //     ? const CircularProgressIndicator(
-                    //         color: Colors.white,
-                    //       )
-                    //     : 
-                        const Text(
+                    child: const Text(
                             "Delete Account",
                             style: TextStyle(
                                 color: Colors.white,

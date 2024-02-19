@@ -8,7 +8,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ["email"]);
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
   Rx<User?> _firebaseUser = Rx<User?>(null);
   User? get user => _firebaseUser.value;
   late UserCredential userCredential;
@@ -101,7 +100,6 @@ class AuthController extends GetxController {
     );
     final UserCredential userCredential =
         await _auth.signInWithCredential(credential);
-    final User user = userCredential.user!;
     Get.offAll(() => HomePage(userCredential.user!));
   }
 

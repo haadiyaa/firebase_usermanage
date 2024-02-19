@@ -1,19 +1,14 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebasemain/controller/auth_controller.dart';
 import 'package:firebasemain/controller/profilecontroller.dart';
 import 'package:firebasemain/view/screens/deleteaccount.dart';
 import 'package:firebasemain/view/widgets/text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 class HomePage extends GetWidget<AuthController> {
   final User? user;
-
 
   HomePage(this.user, {super.key});
 
@@ -21,6 +16,8 @@ class HomePage extends GetWidget<AuthController> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   final ProfileController imagePickerService = ProfileController();
+
+  final TextEditingController newval = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,34 +28,49 @@ class HomePage extends GetWidget<AuthController> {
         builder: (context) => AlertDialog(
           title: Text("Edit $fieldName"),
           content: TextField(
+            controller: newval,
             decoration: InputDecoration(
               hintText: "Enter new $fieldName",
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             onChanged: (value) {
+              value = newval.text;
               newValue = value;
             },
           ),
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(newValue),
-              child: Text("Save"),
+              child: const Text("Save"),
             ),
           ],
         ),
       );
-      //updating in firestore
-      // if(newValue.trim().length>0){
-      //   await userCollection.doc(currentUser.email).update({field:newValue});
-      // }
+
+      if (currentUser.email != null && newValue.trim().isNotEmpty) {
+        try {
+          final docSnapshot = await userCollection.doc(currentUser.email).get();
+
+          if (docSnapshot.exists) {
+            await userCollection
+                .doc(currentUser
+                    .email) // Use currentUser.email as the document ID
+                .update({fieldName: newValue});
+          } else {
+            print('Document does not exist for user: ${currentUser.email}');
+          }
+        } catch (e) {
+          print('Error updating document: $e');
+        }
+      }
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 241, 241, 241),
+      backgroundColor: const Color.fromARGB(255, 241, 241, 241),
       appBar: AppBar(
         title: const Text("Home"),
         backgroundColor: Colors.blue,
@@ -77,28 +89,25 @@ class HomePage extends GetWidget<AuthController> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey,
+                      radius: 55,
+                      child: Icon(Icons.person,size: 50,),
                     );
                   }
                   var userr = snapshot.data?.docs.isNotEmpty ?? false
                       ? snapshot.data!.docs[0].data()
                       : null;
-                  var imageUrl=(userr as Map<String,dynamic>?)?["image"];
-
+                  var imageUrl = (userr as Map<String, dynamic>?)?["image"];
 
                   return ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
                     child: imageUrl == null
-                        ? const Image(
-                          width: 90,
-                          height: 90,
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/profile.webp"),
-                          )
+                        ? const CircleAvatar(
+                      radius: 50,
+                      child: Icon(Icons.person,size: 55,),
+                    )
                         : Image(
-                          width: 90,
-                          height: 90,
+                            width: 90,
+                            height: 90,
                             fit: BoxFit.cover,
                             image: NetworkImage(imageUrl),
                           ),
@@ -111,10 +120,9 @@ class HomePage extends GetWidget<AuthController> {
           Center(
             child: TextButton(
                 onPressed: () {
-                  print("image change");
                   imagePickerService.uploadImage(currentUser.email!);
                 },
-                child: Text("change profile image")),
+                child: const Text("change profile image")),
           ),
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
@@ -140,23 +148,23 @@ class HomePage extends GetWidget<AuthController> {
                           ),
                         ),
                         TextBox(
-                          text: userData['name'] ?? '',
+                          text: userData['name'],
                           sectionName: "username",
                           onPressed: () => editField("username"),
                         ),
                         TextBox(
-                          text: userData['email'] ?? '',
+                          text: userData['email'],
                           sectionName: "email",
                           onPressed: () => editField("email"),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         ElevatedButton(
                           onPressed: () {
                             controller.signOut();
                           },
-                          child: Text("Log Out"),
+                          child: const Text("Log Out"),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -174,7 +182,7 @@ class HomePage extends GetWidget<AuthController> {
                     ),
                   );
                 } else {
-                  return Center(
+                  return const Center(
                     child: Text("null"),
                   );
                 }
@@ -182,7 +190,7 @@ class HomePage extends GetWidget<AuthController> {
                 return Center(
                     child: Text("Error fetching user data: ${snapshot.error}"));
               } else {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
