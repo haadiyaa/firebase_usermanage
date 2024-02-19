@@ -28,18 +28,11 @@ class ForgotPassword extends GetWidget<AuthController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // SizedBox(height: 20,),
-              // BoxInputField(
-              //   // controller: ctrl.signUsername,
-              //   placeholder: const Text("Username"),
-              //   icon: const Icon(Icons.person),
-              // ),
               const SizedBox(
                 height: 20,
               ),
 
               BoxInputField(
-                // controller: ctrl.loginEmail,
                 controller: email,
                 placeholder: const Text("Email"),
                 icon: const Icon(Icons.email),
@@ -60,11 +53,6 @@ class ForgotPassword extends GetWidget<AuthController> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child:
-                      // ctrl.loading.value
-                      //     ? const CircularProgressIndicator(
-                      //         color: Colors.white,
-                      //       )
-                      //     :
                       const Text(
                     "Reset Password",
                     style: TextStyle(
@@ -78,21 +66,6 @@ class ForgotPassword extends GetWidget<AuthController> {
               const SizedBox(
                 height: 30,
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     Get.offAll(() => SignUpPage());
-              //   },
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Text("Don't have an account? "),
-              //       Text(
-              //         "Sign Up",
-              //         style: TextStyle(fontWeight: FontWeight.bold),
-              //       ),
-              //     ],
-              //   ),
-              // )
             ],
           ),
         ),
@@ -100,7 +73,4 @@ class ForgotPassword extends GetWidget<AuthController> {
     );
   }
 
-  void _login() {
-    // controller.logIn(email.text,pass.text);
-  }
 }

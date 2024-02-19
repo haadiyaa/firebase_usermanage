@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 class LoginPage extends GetWidget<AuthController> {
   LoginPage({super.key});
 
-  // final ctrl = Get.put(AuthController());
   final TextEditingController email = TextEditingController();
   final TextEditingController pass = TextEditingController();
 
@@ -36,7 +35,6 @@ class LoginPage extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
-                // controller: ctrl.loginEmail,
                 controller: email,
                 placeholder: const Text("Email"),
                 icon: const Icon(Icons.email),
@@ -45,7 +43,6 @@ class LoginPage extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
-                // controller: ctrl.loginPassword,
                 controller: pass,
                 placeholder: const Text('Password'),
                 icon: const Icon(Icons.key),

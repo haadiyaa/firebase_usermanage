@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebasemain/model/usermodel.dart';
 import 'package:firebasemain/view/screens/home_page.dart';
 import 'package:firebasemain/view/screens/loginpage.dart';
 import 'package:get/get.dart';
@@ -9,54 +8,51 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ["email"]);
-  late Rx<User?> _firebaseUser;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  Rx<User?> _firebaseUser = Rx<User?>(null);
+  User? get user => _firebaseUser.value;
+  late UserCredential userCredential;
 
-  var loading=false.obs;
+  var userDetails = <Map<String, dynamic>>[].obs;
 
-  String get user {
-    if (_firebaseUser.value != null) {
-      return _firebaseUser.value!.email!;
-    } else {
-      return "";
-    }
-  }
+  var loading = false.obs;
+  var isLoading = false.obs;
 
   @override
   void onInit() {
-    // super.onInit();
-    _firebaseUser = Rx<User?>(_auth.currentUser);
+    super.onInit();
     _firebaseUser.bindStream(_auth.authStateChanges());
+    ever(_firebaseUser, (_) {
+      isLoading.value = false;
+    });
   }
 
   void createUser(String name, String email, String password) async {
     try {
-      loading.value=true;
+      loading.value = true;
       CollectionReference reference =
           FirebaseFirestore.instance.collection("Users");
-      await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        reference.add({
-          'name': name,
-          'email': email,
-        }).then((value) => Get.offAll(() => LoginPage()));
+      userCredential = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      await reference.doc(userCredential.user!.uid).set({
+        'name': name,
+        'email': email,
       });
-      loading.value=false;
+      Get.offAll(() => LoginPage());
+
+      loading.value = false;
     } catch (e) {
       Get.snackbar("erro creating account", e.toString());
-      loading.value=false;
+      loading.value = false;
     }
   }
 
   void logIn(String email, String password) async {
     try {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then(
-            (value) => Get.offAll(
-              () => HomePage(),
-            ),
-          );
+      userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      Get.offAll(() => HomePage(userCredential.user!));
     } catch (e) {
       Get.snackbar("Error while logging in", e.toString());
     }
@@ -93,23 +89,23 @@ class AuthController extends GetxController {
     }
   }
 
-  void google_signIn()async{
-    final GoogleSignInAccount? googleUser=await googleSignIn.signIn();
+  void google_signIn() async {
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    final GoogleSignInAuthentication googleAuth=await googleUser!.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
 
-    final AuthCredential credential=GoogleAuthProvider.credential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: googleAuth.idToken,
       accessToken: googleAuth.accessToken,
-
     );
-    // final  User user=await _auth.signInWithCredential(credential).then((value) => Get.offAll(()=>HomePage()));
-    final UserCredential userCredential=await _auth.signInWithCredential(credential);
-    final User user=userCredential.user!;
-    Get.offAll(()=>HomePage());
+    final UserCredential userCredential =
+        await _auth.signInWithCredential(credential);
+    final User user = userCredential.user!;
+    Get.offAll(() => HomePage(userCredential.user!));
   }
 
-  void google_signOut()async{
+  void google_signOut() async {
     await googleSignIn.signOut();
   }
 }
