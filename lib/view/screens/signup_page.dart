@@ -12,7 +12,7 @@ class SignUpPage extends GetWidget<AuthController> {
   final TextEditingController email=TextEditingController();
   final TextEditingController password=TextEditingController();
   final TextEditingController phone=TextEditingController();
-  final TextEditingController address=TextEditingController();
+  final TextEditingController age=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +43,7 @@ class SignUpPage extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
+                obscure: false,
                 controller: password,
                 placeholder: const Text('Password'),
                 icon: const Icon(Icons.key),
@@ -53,6 +54,22 @@ class SignUpPage extends GetWidget<AuthController> {
               BoxInputField(
                 controller: email,
                 placeholder: const Text("Email"),
+                icon: const Icon(Icons.email),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              BoxInputField(
+                controller: phone,
+                placeholder: const Text("Phone Number"),
+                icon: const Icon(Icons.email),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              BoxInputField(
+                controller: age,
+                placeholder: const Text("Age"),
                 icon: const Icon(Icons.email),
               ),
               const SizedBox(
@@ -107,6 +124,6 @@ class SignUpPage extends GetWidget<AuthController> {
   }
 
   void registerUser() {
-    controller.createUser(name.text, email.text, password.text);
+    controller.createUser(name.text, email.text, password.text,phone.text,age.text);
   }
 }

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  String? username, email, id, phone,password;
+  String? username, email, id, phone,password,age;
   UserModel({
     this.username,
     this.email,
     this.id,
     this.phone,
     this.password,
+    this.age
   });
 
   
@@ -18,6 +19,7 @@ class UserModel {
       email: map["email"],
       phone: map["phone"],
       password: map["password"],
+      age: map["age"],
     );
   }
   Map<String, dynamic> toMap() {
@@ -27,6 +29,7 @@ class UserModel {
       "email": email,
       "phone": phone,
       "password": password,
+      "age":age,
     };
   }
 }

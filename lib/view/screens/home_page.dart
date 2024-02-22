@@ -90,7 +90,10 @@ class HomePage extends GetWidget<AuthController> {
                   if (!snapshot.hasData) {
                     return const CircleAvatar(
                       radius: 55,
-                      child: Icon(Icons.person,size: 50,),
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                      ),
                     );
                   }
                   var userr = snapshot.data?.docs.isNotEmpty ?? false
@@ -102,9 +105,12 @@ class HomePage extends GetWidget<AuthController> {
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
                     child: imageUrl == null
                         ? const CircleAvatar(
-                      radius: 50,
-                      child: Icon(Icons.person,size: 55,),
-                    )
+                            radius: 50,
+                            child: Icon(
+                              Icons.person,
+                              size: 55,
+                            ),
+                          )
                         : Image(
                             width: 90,
                             height: 90,
@@ -149,13 +155,23 @@ class HomePage extends GetWidget<AuthController> {
                         ),
                         TextBox(
                           text: userData['name'],
-                          sectionName: "username",
+                          sectionName: "User Name",
                           onPressed: () => editField("username"),
                         ),
                         TextBox(
                           text: userData['email'],
-                          sectionName: "email",
+                          sectionName: "Email",
                           onPressed: () => editField("email"),
+                        ),
+                        TextBox(
+                          text: userData["phone"],
+                          sectionName: "Phone number",
+                          onPressed: () {},
+                        ),
+                        TextBox(
+                          text: userData["age"],
+                          sectionName: "Age",
+                          onPressed: () {},
                         ),
                         const SizedBox(
                           height: 20,
@@ -172,12 +188,6 @@ class HomePage extends GetWidget<AuthController> {
                           },
                           child: const Text("Delete Account"),
                         ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     controller.google_signOut();
-                        //   },
-                        //   child: const Text("Google Sign Out"),
-                        // ),
                       ],
                     ),
                   );

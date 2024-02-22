@@ -5,14 +5,15 @@ class BoxInputField extends StatelessWidget {
   final Widget placeholder;
   final TextEditingController? controller;
   final Widget icon;
+  final obscure;
 
   // final String? Function(String?)? validator;
 
   BoxInputField({
     super.key,
-    this.line,
+    this.line=1,
     required this.placeholder,
-    this.controller, required this.icon,
+    this.controller, required this.icon, this.obscure=false,
   });
 
   InputBorder buildFocusBorder = const OutlineInputBorder(
@@ -39,9 +40,9 @@ class BoxInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: obscure,
       textAlignVertical: TextAlignVertical.top,
       maxLines: line,
-      // validator: validator,
       controller: controller,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(10),

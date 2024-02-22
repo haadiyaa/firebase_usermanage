@@ -26,7 +26,7 @@ class AuthController extends GetxController {
     });
   }
 
-  void createUser(String name, String email, String password) async {
+  void createUser(String name, String email, String password,String phone,String age) async {
     try {
       loading.value = true;
       CollectionReference reference =
@@ -37,6 +37,8 @@ class AuthController extends GetxController {
       await reference.doc(userCredential.user!.uid).set({
         'name': name,
         'email': email,
+        'age':age,
+        "phone":phone,
       });
       Get.offAll(() => LoginPage());
 
