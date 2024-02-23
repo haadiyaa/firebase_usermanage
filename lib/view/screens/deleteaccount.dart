@@ -33,6 +33,7 @@ class DeleteAccount extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
+                keyboard: TextInputType.emailAddress,
                 controller: email,
                 placeholder: const Text("Email"),
                 icon: const Icon(Icons.email),
@@ -41,6 +42,7 @@ class DeleteAccount extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
+                keyboard: TextInputType.visiblePassword,
                 controller: pass,
                 placeholder: const Text('Password'),
                 icon: const Icon(Icons.key),

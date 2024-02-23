@@ -188,6 +188,7 @@ class HomePage extends GetWidget<AuthController> {
                           },
                           child: const Text("Delete Account"),
                         ),
+                        const SizedBox(height: 20,),
                       ],
                     ),
                   );

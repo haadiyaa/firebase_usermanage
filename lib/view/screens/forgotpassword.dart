@@ -33,6 +33,7 @@ class ForgotPassword extends GetWidget<AuthController> {
               ),
 
               BoxInputField(
+                keyboard: TextInputType.emailAddress,
                 controller: email,
                 placeholder: const Text("Email"),
                 icon: const Icon(Icons.email),
