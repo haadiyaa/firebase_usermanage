@@ -13,8 +13,9 @@ class BoxInputField extends StatelessWidget {
     super.key,
     this.line=1,
     required this.placeholder,
-    this.controller, required this.icon, this.obscure=false,
+    this.controller, required this.icon, this.obscure=false, this.keyboard=TextInputType.none,
   });
+  final TextInputType? keyboard;
 
   InputBorder buildFocusBorder = const OutlineInputBorder(
     borderRadius: BorderRadius.all(
@@ -40,6 +41,7 @@ class BoxInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      keyboardType: keyboard,
       obscureText: obscure,
       textAlignVertical: TextAlignVertical.top,
       maxLines: line,

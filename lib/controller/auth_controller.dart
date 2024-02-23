@@ -26,7 +26,8 @@ class AuthController extends GetxController {
     });
   }
 
-  void createUser(String name, String email, String password,String phone,String age) async {
+  void createUser(String name, String email, String password, String phone,
+      String age) async {
     try {
       loading.value = true;
       CollectionReference reference =
@@ -37,8 +38,8 @@ class AuthController extends GetxController {
       await reference.doc(userCredential.user!.uid).set({
         'name': name,
         'email': email,
-        'age':age,
-        "phone":phone,
+        'age': age,
+        "phone": phone,
       });
       Get.offAll(() => LoginPage());
 
@@ -93,16 +94,18 @@ class AuthController extends GetxController {
   void google_signIn() async {
     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-      accessToken: googleAuth.accessToken,
-    );
-    final UserCredential userCredential =
-        await _auth.signInWithCredential(credential);
-    Get.offAll(() => HomePage(userCredential.user!));
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      Get.offAll(() => HomePage(userCredential.user!));
+    }
   }
 
   void google_signOut() async {

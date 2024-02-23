@@ -35,6 +35,7 @@ class SignUpPage extends GetWidget<AuthController> {
             children: [
               SizedBox(height: 20,),
               BoxInputField(
+                keyboard: TextInputType.name,
                 controller: name,
                 placeholder: const Text("Username"),
                 icon: const Icon(Icons.person),
@@ -43,6 +44,7 @@ class SignUpPage extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
+                keyboard: TextInputType.visiblePassword,
                 obscure: false,
                 controller: password,
                 placeholder: const Text('Password'),
@@ -52,6 +54,7 @@ class SignUpPage extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
+                keyboard: TextInputType.emailAddress,
                 controller: email,
                 placeholder: const Text("Email"),
                 icon: const Icon(Icons.email),
@@ -60,17 +63,19 @@ class SignUpPage extends GetWidget<AuthController> {
                 height: 20,
               ),
               BoxInputField(
+                keyboard: TextInputType.phone,
                 controller: phone,
                 placeholder: const Text("Phone Number"),
-                icon: const Icon(Icons.email),
+                icon: const Icon(Icons.phone),
               ),
               const SizedBox(
                 height: 20,
               ),
               BoxInputField(
+                keyboard: TextInputType.number,
                 controller: age,
                 placeholder: const Text("Age"),
-                icon: const Icon(Icons.email),
+                icon: const Icon(Icons.person),
               ),
               const SizedBox(
                 height: 20,
