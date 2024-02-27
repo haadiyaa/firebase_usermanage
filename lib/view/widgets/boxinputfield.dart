@@ -7,13 +7,17 @@ class BoxInputField extends StatelessWidget {
   final Widget icon;
   final obscure;
 
-  // final String? Function(String?)? validator;
+  final String? Function(String?)? validator;
 
   BoxInputField({
     super.key,
-    this.line=1,
+    this.line = 1,
     required this.placeholder,
-    this.controller, required this.icon, this.obscure=false, this.keyboard=TextInputType.none,
+    this.controller,
+    required this.icon,
+    this.obscure = false,
+    this.keyboard = TextInputType.none,
+    this.validator,
   });
   final TextInputType? keyboard;
 
@@ -40,7 +44,8 @@ class BoxInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: validator,
       keyboardType: keyboard,
       obscureText: obscure,
       textAlignVertical: TextAlignVertical.top,

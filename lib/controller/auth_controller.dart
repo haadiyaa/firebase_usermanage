@@ -92,23 +92,50 @@ class AuthController extends GetxController {
   }
 
   void google_signIn() async {
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      Get.offAll(() => HomePage(userCredential.user!));
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        );
+
+        final UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
+
+        await saveUserDataToFirestore(userCredential.user!);
+
+        Get.offAll(() => HomePage(userCredential.user));
+      }
+    } catch (e) {
+      Get.snackbar("Error signing in with Google", e.toString());
     }
   }
 
   void google_signOut() async {
     await googleSignIn.signOut();
+  }
+
+  Future<void> saveUserDataToFirestore(User user) async {
+    try {
+      CollectionReference userCollection =
+          FirebaseFirestore.instance.collection('Users');
+
+      DocumentSnapshot docSnapshot = await userCollection.doc(user.uid).get();
+
+      if (!docSnapshot.exists) {
+        await userCollection.doc(user.uid).set({
+          'name': user.displayName,
+          'email': user.email,
+        });
+      }
+    } catch (e) {
+      print('Error saving user data to Firestore: $e');
+      throw e;
+    }
   }
 }

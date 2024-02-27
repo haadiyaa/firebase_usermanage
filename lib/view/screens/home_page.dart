@@ -54,7 +54,6 @@ class HomePage extends GetWidget<AuthController> {
       if (currentUser.email != null && newValue.trim().isNotEmpty) {
         try {
           final docSnapshot = await userCollection.doc(currentUser.email).get();
-
           if (docSnapshot.exists) {
             await userCollection
                 .doc(currentUser
@@ -154,22 +153,22 @@ class HomePage extends GetWidget<AuthController> {
                           ),
                         ),
                         TextBox(
-                          text: userData['name'],
+                          text: userData['name']?? '',
                           sectionName: "User Name",
                           onPressed: () => editField("username"),
                         ),
                         TextBox(
-                          text: userData['email'],
+                          text: userData['email']??'',
                           sectionName: "Email",
                           onPressed: () => editField("email"),
                         ),
                         TextBox(
-                          text: userData["phone"],
+                          text: userData["phone"]??'',
                           sectionName: "Phone number",
                           onPressed: () {},
                         ),
                         TextBox(
-                          text: userData["age"],
+                          text: userData["age"]??'',
                           sectionName: "Age",
                           onPressed: () {},
                         ),
