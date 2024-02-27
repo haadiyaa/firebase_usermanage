@@ -138,4 +138,6 @@ class AuthController extends GetxController {
       throw e;
     }
   }
+
+  
 }

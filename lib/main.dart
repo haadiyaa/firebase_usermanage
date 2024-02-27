@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebasemain/controller/auth_controller.dart';
+import 'package:firebasemain/controller/firebasenotification.dart';
 import 'package:firebasemain/firebase_options.dart';
 import 'package:firebasemain/controller/instancebinding.dart';
 import 'package:firebasemain/view/screens/splashscreen.dart';
@@ -10,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Get.put(AuthController()); 
+  await FirebaseNotification().initNotification();
   runApp(const MyApp());
 }
 
